@@ -18,7 +18,8 @@ player register from GitHub. There is no server or CLI; the product is the funct
 
 ## Commands
 
-CI runs Python 3.8 to 3.11 (`.github/workflows/pytest.yml`). Inside an activated environment:
+CI runs Python 3.8 to 3.11 (`.github/workflows/pytest.yml`); 3.12 works apart from the known failures
+below, so do not go looking for another interpreter. Inside an activated environment:
 
 ```bash
 make install                                  # pip install -e .[test]; uses whatever `pip` is on PATH
