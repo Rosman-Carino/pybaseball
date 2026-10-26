@@ -13,7 +13,7 @@ player register from GitHub. There is no server or CLI; the product is the funct
   Savant: `statcast*.py`. GitHub: `lahman.py`, `retrosheet.py`, `playerid_lookup.py`.
 - `pybaseball/datasources/` fetches and parses per site. `pybaseball/datahelpers/` is shared, network-free
   helpers. `pybaseball/cache/` is the opt-in DataFrame cache (`@cache.df_cache()` on about 40 public
-  functions, off by default, files in `~/.pybaseball/cache`).
+  functions; files in `~/.pybaseball/cache`).
 - `tests/pybaseball/` mirrors the package and runs offline. `tests/integration/` hits live sites.
 
 ## Commands
@@ -28,6 +28,7 @@ pip install "pandas<3"                        # setup.py has no upper bound; pan
 make test TEST_FLAGS="-n 5"                   # unit tests only (tests/pybaseball), same as CI, about 10 s
 pytest tests/pybaseball/test_batting_leaders.py -q   # one file; add -k <name> for one test
 make mypy ONLY_MODIFIED=0                     # whole package; about 170 pre-existing errors, CI ignores them
+python -c "from pybaseball import standings; print(standings(2024)[0])"   # smoke run: one live Baseball Reference call, returns a list of DataFrames
 ```
 
 Known failures on a clean checkout, not caused by your change: on Python 3.12 to 3.14, 8 tests in
