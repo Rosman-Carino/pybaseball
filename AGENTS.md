@@ -18,19 +18,19 @@ player register from GitHub. There is no server or CLI; the product is the funct
 
 ## Commands
 
-CI runs Python 3.8 to 3.11 (`.github/workflows/pytest.yml`). 3.12 works apart from the known failures below;
-3.14 is untested. If no supported interpreter is active, create one here instead of searching the machine:
+CI runs Python 3.8 to 3.11 (`.github/workflows/pytest.yml`). 3.12 to 3.14 install and run but hit the known
+failures below. If no supported interpreter is active, create one here instead of searching the machine:
 
 ```bash
-uv venv --python 3.11 --seed .venv && source .venv/bin/activate   # --seed adds pip; the Makefile calls bare `pip`
-make install                                  # pip install -e .[test]; goes to whatever `pip` is on PATH
+python3.11 -m venv .venv && source .venv/bin/activate   # or: uv venv --python 3.11 --seed .venv (--seed adds pip)
+make install                                  # pip install -e .[test]; uses whatever `pip` is on PATH, so activate first
 pip install "pandas<3"                        # setup.py has no upper bound; pandas 3 fails 13 unit tests
 make test TEST_FLAGS="-n 5"                   # unit tests only (tests/pybaseball), same as CI, about 10 s
 pytest tests/pybaseball/test_batting_leaders.py -q   # one file; add -k <name> for one test
 make mypy ONLY_MODIFIED=0                     # whole package; about 170 pre-existing errors, CI ignores them
 ```
 
-Known failures on a clean checkout, not caused by your change: on Python 3.12, 8 tests in
+Known failures on a clean checkout, not caused by your change: on Python 3.12 to 3.14, 8 tests in
 `tests/pybaseball/cache/` fail with `'called_once_with' is not a valid assertion` (misspelled mock
 assertions in the tests). `make validate-cache` fails with a 403 from FanGraphs. `make mypy` without
 `ONLY_MODIFIED=0` exits 2 with "Missing target" on a clean tree. There is no lint step; lines are 120 chars.
