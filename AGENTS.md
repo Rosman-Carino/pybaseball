@@ -14,6 +14,9 @@ player register from GitHub. There is no server or CLI; the product is the funct
 - `pybaseball/datasources/` fetches and parses per site. `pybaseball/datahelpers/` is shared, network-free
   helpers. `pybaseball/cache/` is the opt-in DataFrame cache (`@cache.df_cache()` on about 40 public
   functions; files in `~/.pybaseball/cache`).
+- How a call flows: a public function builds the URL, fetches through `datasources/` (`BRefSession` for Baseball
+  Reference, `requests.get` elsewhere), parses with BeautifulSoup or `pd.read_csv`, cleans with
+  `datahelpers/postprocessing.py`, and returns a DataFrame; `@cache.df_cache()` wraps the whole call.
 - `tests/pybaseball/` mirrors the package and runs offline. `tests/integration/` hits live sites.
 
 ## Commands
@@ -48,6 +51,9 @@ assertions in the tests). `make validate-cache` fails with a 403 from FanGraphs.
   `pybaseball/datasources/bref.py`), so every request to it goes through the `BRefSession` singleton:
   curl_cffi with Chrome impersonation and a 10-per-minute throttle. Never call that site with `requests.get`.
   Every other site uses `requests.get` directly.
+- Naming: one module per data source; Baseball Reference variants take a `_bref` suffix (`team_batting_bref`);
+  Statcast functions take a `statcast_` prefix (27 of them); a module's tests live in
+  `tests/pybaseball/test_<module>.py`, with fixtures `tests/pybaseball/data/<name>.html` and `<name>.csv`.
 - A new public function is three edits: the function itself, type-annotated (`mypy.ini` sets
   `disallow_untyped_defs`), its re-export in `pybaseball/__init__.py`, and a `docs/<function>.md` page.
 
