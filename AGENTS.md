@@ -18,11 +18,12 @@ player register from GitHub. There is no server or CLI; the product is the funct
 
 ## Commands
 
-CI runs Python 3.8 to 3.11 (`.github/workflows/pytest.yml`); 3.12 works apart from the known failures
-below, so do not go looking for another interpreter. Inside an activated environment:
+CI runs Python 3.8 to 3.11 (`.github/workflows/pytest.yml`). 3.12 works apart from the known failures below;
+3.14 is untested. If no supported interpreter is active, create one here instead of searching the machine:
 
 ```bash
-make install                                  # pip install -e .[test]; uses whatever `pip` is on PATH
+uv venv --python 3.11 --seed .venv && source .venv/bin/activate   # --seed adds pip; the Makefile calls bare `pip`
+make install                                  # pip install -e .[test]; goes to whatever `pip` is on PATH
 pip install "pandas<3"                        # setup.py has no upper bound; pandas 3 fails 13 unit tests
 make test TEST_FLAGS="-n 5"                   # unit tests only (tests/pybaseball), same as CI, about 10 s
 pytest tests/pybaseball/test_batting_leaders.py -q   # one file; add -k <name> for one test
